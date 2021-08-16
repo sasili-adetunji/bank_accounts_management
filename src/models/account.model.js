@@ -2,10 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const schema = new Schema({
-    email: { type: String, unique: true, match: [/.+\@.+\..+/, 'Please fill a valid email address'], required: true },
-    hash: { type: String, required: true },
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
+    email: { type: String, match: [/.+\@.+\..+/, 'Please fill a valid email address'], required: true },
+    accountNumber: { type: Number, match: [/d{10}/, 'Account Number is not a valid 10 digit number!'], required: true },
     createdDate: { type: Date, default: Date.now }
 });
 
@@ -18,4 +16,4 @@ schema.set('toJSON', {
     }
 });
 
-module.exports = mongoose.model('User', schema);
+module.exports = mongoose.model('Account', schema);

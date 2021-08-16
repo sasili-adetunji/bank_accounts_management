@@ -5,6 +5,7 @@ let userRoute = require('./controllers/users.controller')
 const errorHandler = require('./helpers/errors');
 
 let app = express();
+require('dotenv').config()
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
