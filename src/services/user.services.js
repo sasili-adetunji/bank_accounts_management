@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const db = require('../helpers/db');
 require('dotenv').config();
@@ -39,27 +40,40 @@ async function create(userParam) {
     if (await User.findOne({ email: userParam.email })) {
         throw 'email "' + userParam.email + '" is already taken';
     }
+    const session = await mongoose.startSession();
 
-    const user = new User(userParam);
+    try {
+        session.startTransaction();
 
-    // hash password
-    if (userParam.password) {
-        user.hash = bcrypt.hashSync(userParam.password, 10);
-    }
-    let min = Math.ceil(5111111111);
-    let max = Math.floor(5999999999);
-    let accountNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-
-    const ret = await user.save();
-    let account = new Account({accountNumber: accountNumber});
-    if (ret) {
-        account.email = ret.email
+        const user = new User(userParam);
+        
+        // hash password
+        if (userParam.password) {
+            user.hash = bcrypt.hashSync(userParam.password, 10);
+        }
+        // user.account = ret._id
+        const us = await user.save();
+        
+        let min = Math.ceil(5111111111);
+        let max = Math.floor(5999999999);
+        let accountNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+        let account = new Account({
+            accountNumber: accountNumber,
+            user: us._id           
+        });
         await account.save();
+        
+        await session.commitTransaction();
+
+        return {
+            ...us.toJSON(),
+            accountNumber: account.accountNumber
+        };
+    } catch (error) {
+        console.log(error)
+        await session.abortTransaction();
     }
-    return {
-        ...ret.toJSON(),
-        ...account.toJSON()
-    };
+    session.endSession();
 }
 
 async function update(id, userParam) {
