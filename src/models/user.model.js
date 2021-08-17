@@ -6,7 +6,7 @@ const schema = new Schema({
     hash: { type: String, required: true },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    // account: [{ type: Schema.Types.ObjectId, ref: 'Account', required: true }],
+    accounts: [{ type: Number }],
 }, { timestamps: true });
 
 schema.set('toJSON', {
@@ -21,5 +21,8 @@ schema.set('toJSON', {
     }
 });
 
+schema.set('getFullName', function() {
+    return `${this.firstName} ${this.lastName}`;
+});
 
 module.exports = mongoose.model('User', schema);

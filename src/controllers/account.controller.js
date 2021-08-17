@@ -7,8 +7,6 @@ const accountService = require('../services/account.services');
 router.get('/', getAll);
 router.post('/', createAccount);
 // router.get('/:id', getByAccountId);
-router.put('/:id', update);
-router.delete('/:id', _delete);
 
 module.exports = router;
 
@@ -19,7 +17,7 @@ function getAll(req, res, next) {
 }
 
 function createAccount(req, res, next) {
-    accountService.getAll()
+    accountService.createAccount(req.body.email)
         .then(users => res.json(users))
         .catch(err => next(err));
 }
@@ -29,15 +27,3 @@ function createAccount(req, res, next) {
 //         .then(user => user ? res.json(user) : res.sendStatus(404))
 //         .catch(err => next(err));
 // }
-
-function update(req, res, next) {
-    accountService.update(req.params.id, req.body)
-        .then(() => res.json({}))
-        .catch(err => next(err));
-}
-
-function _delete(req, res, next) {
-    accountService.delete(req.params.id)
-        .then(() => res.json({}))
-        .catch(err => next(err));
-}

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const schema = new Schema({
-    accountNumber: { type: Number, match: [/d{10}/, 'Account Number is not a valid 10 digit number!'], required: true },
+    accountNumber: { type: Number, match: [/d{10}/, 'Account Number is not a valid 10 digit number!'], unique: true, required: true },
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 }, { timestamps: true });
 

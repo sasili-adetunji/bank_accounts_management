@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const accountNumber = require('../helpers/account_number')
 const db = require('../helpers/db');
 require('dotenv').config();
 
@@ -46,28 +47,25 @@ async function create(userParam) {
         session.startTransaction();
 
         const user = new User(userParam);
+        const account_no = accountNumber()
         
         // hash password
         if (userParam.password) {
             user.hash = bcrypt.hashSync(userParam.password, 10);
         }
-        // user.account = ret._id
+        user.accounts.push(account_no)
         const us = await user.save();
-        
-        let min = Math.ceil(5111111111);
-        let max = Math.floor(5999999999);
-        let accountNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+
         let account = new Account({
-            accountNumber: accountNumber,
+            accountNumber: account_no,
             user: us._id           
         });
-        await account.save();
-        
+        const b = await account.save();
         await session.commitTransaction();
 
         return {
             ...us.toJSON(),
-            accountNumber: account.accountNumber
+            // accountNumber: account.accountNumber
         };
     } catch (error) {
         console.log(error)
