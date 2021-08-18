@@ -13,7 +13,7 @@ function authenticate(req, res, next) {
     userService.login(req.body)
         .then(user => user ? res.json(user) : res.status(400).json({ message: 'email or password is incorrect' }))
         .catch(err => next(err));
-}
+};
 
 function register(req, res, next) {
     userService.signup(req.body)
@@ -21,4 +21,4 @@ function register(req, res, next) {
             return res.json(doc)
         })
         .catch(err => next(err));
-}
+};

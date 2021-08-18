@@ -53,7 +53,6 @@ async function signup(userParam) {
 
         return {
             ...us.toJSON(),
-            // accountNumber: account.accountNumber
         };
     } catch (error) {
         await session.abortTransaction();

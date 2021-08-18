@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
-const userModel = require('../models/user.model')
-const accountModel = require('../models/account.model')
-const transactionModel = require('../models/transaction.model')
+const userModel = require('../models/user.model');
+const accountModel = require('../models/account.model');
+const transactionModel = require('../models/transaction.model');
 
-require('dotenv').config()
+require('dotenv').config();
 
 
 const connectionOptions = { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false };
