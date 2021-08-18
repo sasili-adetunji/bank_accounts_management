@@ -1,27 +1,30 @@
-const expressJwt = require('express-jwt');
-const userService = require('../services/user.services');
+const jwt =  require('jsonwebtoken')
 require('dotenv').config()
 
-module.exports = jwt;
+const secret = process.env.secret;
 
-function jwt() {
-    const secret = process.env.secret; 
-    return expressJwt({ secret, algorithms: ['HS256'], isRevoked }).unless({
-        path: [
-            // public routes that don't require authentication
-            '/users/authenticate',
-            '/users/register'
-        ]
-    });
-}
+const sign = (payload) => {
+  let token = jwt.sign(payload, secret, { expiresIn: 86400 });
+  return token
+};
 
-async function isRevoked(req, payload, done) {
-    const user = await userService.getById(payload.sub);
-
-    // revoke token if user no longer exists
-    if (!user) {
-        return done(null, true);
+const verify = (req, res, next) => {
+  const header = req.headers['authorization']
+  let token = header && header.split(' ')[1]
+  if ((typeof header === 'undefined') || (!token)) {
+    return res.status(403).send({ message: "No token provided!" });
+  } 
+  jwt.verify(token, secret, (err, decoded) => {
+    if (err) {
+      return res.status(401).send({ message: "Unauthorized!" });
+    } else {
+      req.userId = decoded.sub;
+      next()
     }
+  })
+};
 
-    done();
+module.exports = {
+  sign,
+  verify,
 };

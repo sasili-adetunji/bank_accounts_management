@@ -1,8 +1,5 @@
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
 const db = require('../helpers/db');
 const accountNumber = require('../helpers/account_number')
-
 require('dotenv').config();
 
 const User = db.User;
@@ -45,4 +42,4 @@ async function createAccount(email) {
     return {
         accountNumber: account.accountNumber
     };
-}
+};
