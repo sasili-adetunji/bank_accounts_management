@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const userModel = require('../models/user.model')
 const accountModel = require('../models/account.model')
+const transactionModel = require('../models/transaction.model')
 
 require('dotenv').config()
 
@@ -10,5 +11,6 @@ mongoose.Promise = global.Promise;
 
 module.exports = {
     User: userModel,
-    Account: accountModel
+    Account: accountModel,
+    Transaction: transactionModel
 };

@@ -3,6 +3,7 @@ let bodyParser = require('body-parser')
 const cors = require('cors');
 let userRoute = require('./controllers/user.controller')
 let accountRoute = require('./controllers/account.controller')
+let transactionRoute = require('./controllers/transaction.controller')
 
 const errorHandler = require('./helpers/errors');
 
@@ -20,6 +21,7 @@ app.use((req, res, next) => {
 
 app.use('/user', userRoute);
 app.use('/account', accountRoute);
+app.use('/transaction', transactionRoute);
 
 // global error handler
 app.use(errorHandler);

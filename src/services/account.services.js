@@ -27,6 +27,9 @@ async function getByAccountId(accountId) {
 
 async function createAccount(email) {
     const user = await User.findOne({email: email});
+    if (!user) {
+        throw new Error('User does not exist')
+    }
     if (await Account.find({ user: user._id }).count() > 4 ) {
         throw "Maximum number of account created"
     }
