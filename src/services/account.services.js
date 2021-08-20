@@ -6,28 +6,30 @@ const User = db.User;
 const Account = db.Account;
 
 module.exports = {
-    getAll,
     getByAccountId,
     createAccount,
+    getAll,
 };
 
-async function getAll(accountNumber) {
-    if (accountNumber) {
-        return await Account.findOne({ accountNumber: accountNumber }, { firstName: 1 }).populate('user', { getFullName: 1, email: 1 });
-    }
-    return await Account.find({}, { accountNumber: 1 }).populate('user', { firstName: 1, email: 1 });
+async function getAll() {
+    return await Account.find({}, { accountNumber: 1, accountBalance: 1 }).populate('user', { firstName: 1, email: 1 });
 }
 
 async function getByAccountId(accountId) {
-    return await Account.findOne({ accountNumber: accountId });
+    const account = await Account.findOne({ accountNumber: accountId })
+    if (!account) {
+        throw 'This account does not exist';
+    }
+    return await Account.findOne({ accountNumber: accountId },  { accountNumber: 1, accountBalance: 1 }).populate('user', { firstName: 1, email: 1 });
 }
 
-async function createAccount(email) {
-    const user = await User.findOne({email: email});
+async function createAccount(req) {
+    const userId = req.userId
+    const user = await User.findById(userId)
     if (!user) {
         throw new Error('User does not exist')
     }
-    if (await Account.find({ user: user._id }).count() > 4 ) {
+    if (await Account.countDocuments({ user: userId }) >= 4 ) {
         throw "Maximum number of account created"
     }
     

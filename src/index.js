@@ -15,10 +15,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 
-app.use('/', (req, res) => res.send('Welcome to the Banking Management Routes'));
 app.use('/user', userRoute);
 app.use('/account', auth.verify, accountRoute);
 app.use('/transaction', auth.verify, transactionRoute);
+app.use('/', (req, res) => res.json({"message": "Welcome to the Banking Management Routes"}));
 
 app.use(handleErrors);
 

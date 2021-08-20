@@ -11,14 +11,14 @@ module.exports = router;
 
 function authenticate(req, res, next) {
     userService.login(req.body)
-        .then(user => user ? res.json(user) : res.status(400).json({ message: 'email or password is incorrect' }))
+        .then(user => user ? res.json({"payload": user}) : res.status(400).json({ message: 'email or password is incorrect' }))
         .catch(err => next(err));
 };
 
 function register(req, res, next) {
     userService.signup(req.body)
         .then((doc) => {
-            return res.json(doc)
+            return res.json({"payload": doc})
         })
         .catch(err => next(err));
 };

@@ -17,12 +17,12 @@ function createTransaction(req, res, next) {
 
 function getAllTransaction(req, res, next) {
     transactionService.getAllTransaction()
-        .then(users => res.json(users))
+        .then(doc => res.json(doc))
         .catch(err => next(err));
 }
 
 function getTransaction(req, res, next) {
     transactionService.getTransaction(req.params.id)
-        .then(user => user ? res.json(user) : res.sendStatus(404))
+        .then(doc => doc ? res.json(doc) : res.sendStatus(404))
         .catch(err => next(err));
 }

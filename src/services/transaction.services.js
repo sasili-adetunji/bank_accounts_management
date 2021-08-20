@@ -52,13 +52,13 @@ async function createTransaction(req) {
     session.endSession();
 }
 
-async function getAllTransaction(accountNumber) {
-    // if (accountNumber) {
-    //     return await Transaction.findOne();
-    // }
+async function getAllTransaction() {
     return await Transaction.find();
 }
 
-async function getTransaction(accountNumber) {
-    return await Account.find({}, { accountNumber: 1 });
+async function getTransaction(account_number) {
+    return await Transaction.find(
+        { $or: [{ senderAccount: account_number }, 
+            { receiverAccount: account_number }]
+        });
 };
